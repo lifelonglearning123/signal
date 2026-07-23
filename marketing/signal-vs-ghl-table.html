@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Signal vs GoHighLevel Voice AI</title>
+<style>
+  :root {
+    --ink:#0A0A0A; --accent:#1E5BFF; --accent-2:#4d82ff;
+    --t1:#ffffff; --t2:rgba(255,255,255,0.62); --t3:rgba(255,255,255,0.40);
+    --hair:rgba(255,255,255,0.09); --card:rgba(255,255,255,0.035);
+    --font:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Helvetica Neue","Segoe UI",Roboto,sans-serif;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html,body { background:#141418; font-family:var(--font); -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+  .canvas {
+    width:1080px; height:1140px; margin:0 auto; position:relative; color:var(--t1); overflow:hidden;
+    background:
+      radial-gradient(760px 520px at 100% -6%, rgba(30,91,255,0.26), transparent 62%),
+      radial-gradient(600px 600px at -10% 108%, rgba(30,91,255,0.10), transparent 60%),
+      #08080B;
+  }
+  .canvas::before { content:""; position:absolute; inset:0; pointer-events:none;
+    background-image:radial-gradient(circle at 1px 1px, rgba(255,255,255,0.035) 1px, transparent 1.4px);
+    background-size:38px 38px; -webkit-mask-image:linear-gradient(to bottom,black 30%,transparent 92%); }
+  .pad { position:relative; padding:66px 64px 58px; height:100%; display:flex; flex-direction:column; }
+
+  /* Brand */
+  .brand { display:flex; align-items:center; gap:11px; }
+  .brand .mark { display:flex; align-items:flex-end; gap:3px; height:23px; }
+  .brand .mark i { width:4px; border-radius:3px; background:var(--accent); display:block; box-shadow:0 0 12px rgba(30,91,255,0.5); }
+  .brand .mark i:nth-child(1){height:9px;} .brand .mark i:nth-child(2){height:17px;}
+  .brand .mark i:nth-child(3){height:23px;} .brand .mark i:nth-child(4){height:13px;}
+  .brand .name { font-size:23px; font-weight:600; letter-spacing:-0.02em; }
+
+  h1 { font-size:57px; line-height:1.02; font-weight:640; letter-spacing:-0.035em; margin-top:30px; }
+  h1 .vs { color:var(--t3); font-weight:500; }
+  .eyebrow { color:var(--t2); font-size:16px; font-weight:500; letter-spacing:-0.01em; margin-top:16px; }
+  .eyebrow b { color:var(--accent-2); font-weight:600; }
+
+  /* Comparison panel */
+  .panel { margin-top:40px; position:relative; border:1px solid var(--hair); border-radius:26px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.015));
+    backdrop-filter:blur(2px); overflow:hidden; }
+  table { width:100%; border-collapse:separate; border-spacing:0; }
+  col.cf{width:27%;} col.cs{width:41%;} col.cg{width:32%;}
+
+  thead th { text-align:left; padding:26px 26px 20px; vertical-align:bottom; }
+  .th-sig { font-size:21px; font-weight:600; letter-spacing:-0.02em; color:#fff; }
+  .th-sig small { display:block; font-size:13px; font-weight:500; color:var(--accent-2); letter-spacing:0.01em; margin-top:4px; }
+  .th-ghl { font-size:18px; font-weight:600; letter-spacing:-0.01em; color:var(--t2); }
+
+  tbody td { padding:22px 26px; font-size:17.5px; line-height:1.34; vertical-align:middle; }
+  td.feat { color:var(--t3); font-weight:600; font-size:13px; letter-spacing:0.08em; text-transform:uppercase; }
+  td.ghl { color:var(--t2); }
+  tbody tr td { border-top:1px solid var(--hair); }
+
+  /* Signal winner-card: continuous tinted column via per-cell side borders */
+  .th-sig, td.sig {
+    background:linear-gradient(180deg, rgba(30,91,255,0.16), rgba(30,91,255,0.07));
+    border-left:1px solid rgba(30,91,255,0.32); border-right:1px solid rgba(30,91,255,0.32);
+    color:#fff; font-weight:560;
+  }
+  thead .th-sig { border-top:1px solid rgba(30,91,255,0.32); border-radius:20px 20px 0 0; box-shadow:0 -1px 40px rgba(30,91,255,0.10) inset; }
+  tbody tr td.sig { border-top:1px solid rgba(30,91,255,0.16); }
+  tbody tr:last-child td.sig { border-bottom:1px solid rgba(30,91,255,0.32); border-radius:0 0 20px 20px; }
+  td.sig b { font-weight:700; }
+
+  .num { font-variant-numeric:tabular-nums; letter-spacing:-0.01em; }
+
+  /* Circular check + con badges */
+  .chk { display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:50%;
+    background:var(--accent); color:#fff; font-size:12px; font-weight:800; margin-right:9px; vertical-align:-4px;
+    box-shadow:0 3px 10px rgba(30,91,255,0.45); }
+  .chk.no { background:rgba(255,255,255,0.07); color:var(--t3); box-shadow:none; }
+  .flag { display:inline-block; font-size:12px; font-weight:600; color:#ff9d9d;
+    background:rgba(255,86,86,0.12); border:1px solid rgba(255,86,86,0.22); padding:2px 9px;
+    border-radius:999px; margin-left:8px; vertical-align:2px; letter-spacing:0.01em; }
+
+  /* Footer */
+  .foot { margin-top:44px; padding-top:40px; display:flex; align-items:flex-end; justify-content:space-between; }
+  .foot .tag { font-size:29px; font-weight:640; letter-spacing:-0.03em; line-height:1.18; }
+  .foot .tag b { color:var(--accent-2); }
+  .foot .tag span { color:var(--t2); font-weight:500; }
+  .foot .cta { text-align:right; }
+  .foot .cta .a { color:#fff; font-size:17px; font-weight:600; letter-spacing:-0.01em; }
+  .foot .cta .k { color:var(--t3); font-size:14px; margin-top:3px; }
+  .hint { text-align:center; color:#6a6a72; font-size:12px; padding:14px; font-family:var(--font); }
+</style>
+</head>
+<body>
+  <div class="canvas">
+    <div class="pad">
+      <div class="brand"><span class="mark"><i></i><i></i><i></i><i></i></span><span class="name">Signal</span></div>
+      <h1>Signal <span class="vs">vs</span><br />GoHighLevel Voice&nbsp;AI</h1>
+      <div class="eyebrow">The white-label voice AI for <b>GoHighLevel agencies</b> · 2026</div>
+
+      <div class="panel">
+        <table>
+          <colgroup><col class="cf" /><col class="cs" /><col class="cg" /></colgroup>
+          <thead>
+            <tr>
+              <th></th>
+              <th class="th-sig">Signal<small>AI voice for GHL agencies</small></th>
+              <th class="th-ghl">GHL Voice AI</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="feat">Voice</td>
+              <td class="sig">Retell + ElevenLabs premium — sounds human</td>
+              <td class="ghl">“Robotic” <span class="flag">▲178 votes</span></td>
+            </tr>
+            <tr>
+              <td class="feat">AI brain</td>
+              <td class="sig">Pick per client — GPT-5.5 · Claude 4.6 · Gemini</td>
+              <td class="ghl">GPT-5 Mini only</td>
+            </tr>
+            <tr>
+              <td class="feat">Caller → CRM</td>
+              <td class="sig"><span class="chk">✓</span>Name + summary + sentiment synced</td>
+              <td class="ghl">No caller recognition <span class="flag">▲174 votes</span></td>
+            </tr>
+            <tr>
+              <td class="feat">Agency price</td>
+              <td class="sig"><span class="num">$149</span>/mo · <b>unlimited clients</b></td>
+              <td class="ghl"><span class="num">$97</span>/mo · per sub-account</td>
+            </tr>
+            <tr>
+              <td class="feat">Your margin</td>
+              <td class="sig"><span class="chk">✓</span>You set the resale price</td>
+              <td class="ghl"><span class="chk no">✕</span>Cost inside your stack</td>
+            </tr>
+            <tr>
+              <td class="feat">Reliability</td>
+              <td class="sig"><span class="chk">✓</span>Silence / drop + health alerts</td>
+              <td class="ghl"><span class="chk no">✕</span>Not offered</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="foot">
+        <div class="tag"><b class="num">$149</b>/mo. Unlimited clients.<br /><span>And it sounds human.</span></div>
+        <div class="cta"><div class="a">Hear it live →</div><div class="k">Comment DEMO</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="hint">Screenshot the .canvas node (1080×1200) to export.</div>
+</body>
+</html>

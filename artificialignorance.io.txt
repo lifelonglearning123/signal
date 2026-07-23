@@ -1,0 +1,101 @@
+;;
+;; Domain:     artificialignorance.io.
+;; Exported:   2026-07-22 22:22:29
+;;
+;; This file is intended for use for informational and archival
+;; purposes ONLY and MUST be edited before use on a production
+;; DNS server.  In particular, you must:
+;;   -- update the SOA record with the correct authoritative name server
+;;   -- update the SOA record with the contact e-mail address information
+;;   -- update the NS record(s) with the authoritative name servers for this domain.
+;;
+;; For further information, please consult the BIND documentation
+;; located on the following website:
+;;
+;; http://www.isc.org/
+;;
+;; And RFC 1035:
+;;
+;; http://www.ietf.org/rfc/rfc1035.txt
+;;
+;; Please note that we do NOT offer technical support for any use
+;; of this zone data, the BIND name server, or any other third-party
+;; DNS software.
+;;
+;; Use at your own risk.
+;; SOA Record
+artificialignorance.io	3600	IN	SOA	joyce.ns.cloudflare.com. dns.cloudflare.com. 2053642554 10000 2400 604800 3600
+
+;; NS Records
+artificialignorance.io.	86400	IN	NS	joyce.ns.cloudflare.com.
+artificialignorance.io.	86400	IN	NS	zahir.ns.cloudflare.com.
+
+;; A Records
+artificialignorance.io.	600	IN	A	216.198.79.1 ; cf_tags=cf-proxied:false
+
+;; CNAME Records
+app.artificialignorance.io.	1	IN	CNAME	whitelabel.ludicrous.cloud. ; cf_tags=cf-proxied:false
+artificial.artificialignorance.io.	1	IN	CNAME	brand.ludicrous.cloud. ; cf_tags=cf-proxied:false
+canopy-studio.artificialignorance.io.	600	IN	CNAME	ab9c952fd458fafc.vercel-dns-016.com. ; cf_tags=cf-proxied:false
+clientconnect.artificialignorance.io.	600	IN	CNAME	2b28fe2ad3154e44.vercel-dns-017.com. ; cf_tags=cf-proxied:false
+connect.artificialignorance.io.	3600	IN	CNAME	brand.ludicrous.cloud. ; cf_tags=cf-proxied:false
+construction2026.artificialignorance.io.	600	IN	CNAME	4916516dc9096ec2.vercel-dns-016.com. ; cf_tags=cf-proxied:false
+cre8world.artificialignorance.io.	3600	IN	CNAME	sites.ludicrous.cloud. ; cf_tags=cf-proxied:false
+crm.artificialignorance.io.	1	IN	CNAME	x4usmh9t.up.railway.app. ; cf_tags=cf-proxied:false
+dashboard.artificialignorance.io.	1	IN	CNAME	custom.knotie-ai.pro. ; cf_tags=cf-proxied:false
+email.ai.artificialignorance.io.	1	IN	CNAME	mailgun.org. ; cf_tags=cf-proxied:false
+email.connect.artificialignorance.io.	3600	IN	CNAME	mailgun.org. ; cf_tags=cf-proxied:false
+email.email.artificialignorance.io.	3600	IN	CNAME	mailgun.org. ; cf_tags=cf-proxied:false
+email.payment.artificialignorance.io.	3600	IN	CNAME	mailgun.org. ; cf_tags=cf-proxied:false
+gbp.artificialignorance.io.	600	IN	CNAME	209c4dffeac30ec8.vercel-dns-016.com. ; cf_tags=cf-proxied:false
+link.artificialignorance.io.	3600	IN	CNAME	brand.ludicrous.cloud. ; cf_tags=cf-proxied:false
+partners.artificialignorance.io.	600	IN	CNAME	8b06217e9ff4b309.vercel-dns-017.com. ; cf_tags=cf-proxied:false
+print.artificialignorance.io.	1	IN	CNAME	sites.ludicrous.cloud. ; cf_tags=cf-proxied:false
+questionnaire.artificialignorance.io.	1	IN	CNAME	fe037f6db82ff2bc.vercel-dns-016.com. ; cf_tags=cf-proxied:false
+signal.artificialignorance.io.	1	IN	CNAME	f4c2d5daf68c20b4.vercel-dns-016.com. ; cf_tags=cf-proxied:false
+voice-builder.artificialignorance.io.	600	IN	CNAME	5dd9e193e126dd88.vercel-dns-016.com. ; cf_tags=cf-proxied:false
+voice-monitor.artificialignorance.io.	600	IN	CNAME	ad251243b7507d18.vercel-dns-016.com. ; cf_tags=cf-proxied:false
+www.artificialignorance.io.	600	IN	CNAME	967f6d44f8846542.vercel-dns-017.com. ; cf_tags=cf-proxied:false
+
+;; MX Records
+ai.artificialignorance.io.	1	IN	MX	1 mxb.mailgun.org.
+ai.artificialignorance.io.	1	IN	MX	1 mxa.mailgun.org.
+artificialignorance.io.	1	IN	MX	0 smtp.google.com.
+connect.artificialignorance.io.	600	IN	MX	20 mxb.mailgun.org.
+connect.artificialignorance.io.	600	IN	MX	10 mxa.mailgun.org.
+email.artificialignorance.io.	600	IN	MX	20 mxb.mailgun.org.
+email.artificialignorance.io.	600	IN	MX	10 mxa.mailgun.org.
+payment.artificialignorance.io.	600	IN	MX	20 mxb.mailgun.org.
+payment.artificialignorance.io.	600	IN	MX	10 mxa.mailgun.org.
+
+;; TXT Records
+ai.artificialignorance.io.	1	IN	TXT	"v=spf1 include:spf.leadconnectorhq.com include:mailgun.org ~all"
+artificialignorance.io.	1	IN	TXT	"google-site-verification=CQ9fcpqYpR8fhLU0YtFsQvzXDvdNiqCVK2MSPB8G7is"
+connect.artificialignorance.io.	3600	IN	TXT	"v=spf1 include:mailgun.org include:spf.leadconnectorhq.com ~all"
+default._domainkey.artificialignorance.io.	1	IN	TXT	"v=DKIM1"
+_dmarc.ai.artificialignorance.io.	1	IN	TXT	"v=DMARC1;p=none;"
+_dmarc.connect.artificialignorance.io.	600	IN	TXT	"v=DMARC1;p=none;"
+_dmarc.email.artificialignorance.io.	1	IN	TXT	"v=DMARC1; p=none; rua=mailto:dmarc@artificialignorance.io; fo=1"
+_dmarc.payment.artificialignorance.io.	600	IN	TXT	"v=DMARC1;p=none;"
+email.artificialignorance.io.	3600	IN	TXT	"v=spf1 include:mailgun.org include:spf.leadconnectorhq.com ~all"
+google._domainkey.artificialignorance.io.	1	IN	TXT	"v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA6z2KOFYgiPf/T4yEp8VoZigsy0xZNkOHL6hNAxesYVFkBDkNm/BPbgfcVrfan9v5WHLulNY2jjCVQ1ZXqAEVzd3oy4gUajGfY5tg9RHsPTZMqDiUf3o73kasO9f41Gt5vmYzZVaYH07+ddLOXQD6GrWHaWtm1R+2X9f415UZNmhz3YSsILtMnv2hgXCvWQ3VR" "UZkTEdLFgVtnf1ohiFgcCczxM9/RASKfGE8OKk82n153gRb3Nlb40fFuSjf30ucZX/M8pQwtogwNoIBlO2OAfu6frfZxqXyo0eyoI91+3be120FwyvwG4Zrgpl75qFPvADcNwI3AlXkL3IHeYNT/wIDAQAB"
+_knotie-verification.dashboard.artificialignorance.io.	1	IN	TXT	"knotie-verify-0yb4vgnlwyh"
+mailo._domainkey.ai.artificialignorance.io.	1	IN	TXT	"k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDjRuB9yvpfaGkPLovBJvMiFxWbhj5IqmBDbbsKLKpOauryE2L/YKR7EJ9lBCvMteFcbJmA2HAkrbLYXo3oj/uPiEFGADA/CLs8uTR4NOhPBjfPrKsivfSsebZ5AfP9sxD2qhiog8tpqLT0UjULmIs/KIKFq4F5iEhCPkOsGI01xwIDAQAB"
+mailo._domainkey.connect.artificialignorance.io.	600	IN	TXT	"k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+rwyol9qbrkPgBQLHny/TpNqstrui5wjVhQT0aUbhMpqYCEFrZ1JSxoeqy2GaM+R0IJtnjYoyXU8qFabB7P2Md9epYUGcRWF+KZuOuq6wRYwMGYEUGhPM8sGtrPcFaDgBeHKHy+6Ty+crn+job28NNFzBTfxhVzk7AMYwlP7jZwIDAQAB"
+payment.artificialignorance.io.	3600	IN	TXT	"v=spf1 include:mailgun.org include:spf.leadconnectorhq.com ~all"
+pic._domainkey.email.artificialignorance.io.	600	IN	TXT	"k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCtZkC3VH0Ys8PdKH0+3V0kSB/OkRBBs86v3G1FNGwTGIHqtSIX5Ut0LTcfBm+kYr4XgHrvUos9mhTHudBHhsWKkzkK5Tvf2yHW04zYU/IWA/zYu31eQC9y0BROXJp739gBMhj5CH0izbHDgNnzZgTCg//xzIqNWTV9lvPXoYXXMQIDAQAB"
+pic._domainkey.payment.artificialignorance.io.	600	IN	TXT	"k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDAT/JQquywMEb7IMWhqfsdZRovfhUmOnr0S9zz4CAZ6QGEULDV6AzkDD36s/c+5aq2D19C7UzWOxVEyBj4WhEiF28PN2Itl8HPBH3L7YPIzHx3+s1SIopdlT4cYvWXMW8J7/dydFSayPRL8OgMKacTRgTQbJtriwAoB6bnVOS8kwIDAQAB"
+_railway-verify.crm.artificialignorance.io.	1	IN	TXT	"railway-verify=ca0f7b0e0522af530357921754e3244e4ea0d543beb41bec8ed25d636cdde4bd"
+_vercel.artificialignorance.io.	1	IN	TXT	"vc-domain-verify=signal.artificialignorance.io,25e9cbc7023adc41bb8d"
+_vercel.artificialignorance.io.	1	IN	TXT	"vc-domain-verify=questionnaire.artificialignorance.io,f75c54cef45b37c6bfc0"
+_vercel.artificialignorance.io.	600	IN	TXT	"vc-domain-verify=canopy-studio.artificialignorance.io,fd62ea40778d3f86a5ab,dc"
+_vercel.artificialignorance.io.	600	IN	TXT	"vc-domain-verify=voice-builder.artificialignorance.io,f3aacb93d67a916a52bf,dc"
+_vercel.artificialignorance.io.	600	IN	TXT	"vc-domain-verify=construction2026.artificialignorance.io,3d0b3c6837472f2f53db,dc"
+_vercel.artificialignorance.io.	600	IN	TXT	"vc-domain-verify=voice-monitor.artificialignorance.io,0cfeab6aa3e8b299f176,dc"
+_vercel.artificialignorance.io.	600	IN	TXT	"vc-domain-verify=gbp.artificialignorance.io,c239e16ec70f03f10aba,dc"
+_vercel.artificialignorance.io.	1	IN	TXT	"vc-domain-verify=artificialignorance.io,1581d91125fad9de93a6"
+_vercel.artificialignorance.io.	600	IN	TXT	"vc-domain-verify=partners.artificialignorance.io,a78570bf94cccf0c2b59,dc"
+_vercel.artificialignorance.io.	1	IN	TXT	"vc-domain-verify=clientconnect.artificialignorance.io,6bc07cbaaacd61eb432f"
+_vercel.artificialignorance.io.	600	IN	TXT	"vc-domain-verify=clientconnect.artificialignorance.io,6bc07cbaaacd61eb432f,dc"
+_vercel.artificialignorance.io.	600	IN	TXT	"vc-domain-verify=www.artificialignorance.io,b5a6e4894fecbaedae1b,dc"
+_vercel.artificialignorance.io.	600	IN	TXT	"vc-domain-verify=artificialignorance.io,55d99c104041c5a3a503,dc"

@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Signal — GHL creator recruitment graphic (1200×630)</title>
+<style>
+  :root {
+    --ink: #0A0A0A;
+    --ink-2: #141414;
+    --accent: #1E5BFF;
+    --accent-soft: #dde4ff;
+    --line: #27272A;
+    --mute: #A1A1AA;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #1c1c22;
+    font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  /* Export target: screenshot ONLY this .canvas element (1200×630). */
+  .canvas {
+    position: relative;
+    width: 1200px;
+    height: 630px;
+    margin: 0 auto;
+    background:
+      radial-gradient(1100px 500px at 82% -10%, rgba(30,91,255,0.28), transparent 60%),
+      var(--ink);
+    color: #fff;
+    overflow: hidden;
+    border-radius: 4px;
+  }
+  /* Subtle dot-grid texture, faded top→bottom (matches the /agencies hero). */
+  .canvas::before {
+    content: "";
+    position: absolute; inset: 0; pointer-events: none;
+    background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.05) 1px, transparent 1.3px);
+    background-size: 34px 34px;
+    -webkit-mask-image: linear-gradient(to bottom, black 55%, transparent 100%);
+            mask-image: linear-gradient(to bottom, black 55%, transparent 100%);
+  }
+  .pad { position: relative; height: 100%; padding: 60px 64px; display: flex; flex-direction: column; }
+
+  /* Top bar */
+  .top { display: flex; align-items: center; justify-content: space-between; }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand .mark {
+    display: flex; align-items: flex-end; gap: 3px; height: 26px;
+  }
+  .brand .mark i {
+    width: 4px; border-radius: 3px; background: var(--accent); display: block;
+  }
+  .brand .mark i:nth-child(1){ height: 10px; }
+  .brand .mark i:nth-child(2){ height: 20px; }
+  .brand .mark i:nth-child(3){ height: 26px; }
+  .brand .mark i:nth-child(4){ height: 15px; }
+  .brand .name { font-size: 25px; font-weight: 700; letter-spacing: -0.02em; }
+  .pill {
+    font-size: 13px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent-soft); border: 1px solid rgba(30,91,255,0.55);
+    background: rgba(30,91,255,0.12); padding: 8px 14px; border-radius: 999px;
+  }
+
+  /* Middle */
+  .mid { margin-top: auto; margin-bottom: auto; }
+  .eyebrow {
+    font-size: 15px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 18px;
+  }
+  h1 {
+    font-size: 62px; line-height: 1.03; font-weight: 700; letter-spacing: -0.025em;
+    max-width: 15.5ch;
+  }
+  h1 .hl { color: var(--accent); }
+  .sub {
+    margin-top: 22px; font-size: 25px; line-height: 1.4; color: var(--mute);
+    font-weight: 400; max-width: 40ch;
+  }
+
+  /* Bottom CTA */
+  .bottom { display: flex; align-items: center; justify-content: space-between; }
+  .cta { display: flex; align-items: center; gap: 14px; font-size: 27px; font-weight: 600; }
+  .cta .kw {
+    color: #fff; background: var(--accent); padding: 6px 16px; border-radius: 8px;
+    font-weight: 700; letter-spacing: 0.02em;
+  }
+  .cta .arrow { color: var(--accent); font-size: 30px; }
+  .meta { font-size: 16px; color: var(--mute); text-align: right; line-height: 1.5; }
+  .meta b { color: #fff; font-weight: 600; }
+
+  .hint { text-align: center; color: #9aa; font-size: 13px; font-family: -apple-system, "Segoe UI", sans-serif; padding-bottom: 20px; }
+  @media print { .hint { display: none; } body { background: #fff; } }
+</style>
+</head>
+<body>
+  <div class="canvas">
+    <div class="pad">
+      <div class="top">
+        <div class="brand">
+          <span class="mark"><i></i><i></i><i></i><i></i></span>
+          <span class="name">Signal</span>
+        </div>
+        <span class="pill">Paid gig · Market rate</span>
+      </div>
+
+      <div class="mid">
+        <div class="eyebrow">For content creators in the GoHighLevel space</div>
+        <h1>We're paying creators to make content agencies <span class="hl">actually share.</span></h1>
+        <p class="sub">Short-form video, UGC &amp; posts for Signal — the white-label voice AI that answers every client's calls.</p>
+      </div>
+
+      <div class="bottom">
+        <div class="cta">
+          <span>Comment</span>
+          <span class="kw">CREATE</span>
+          <span class="arrow">→</span>
+          <span>we'll DM you the brief</span>
+        </div>
+        <div class="meta"><b>Paid per project.</b><br />You set your rate.</div>
+      </div>
+    </div>
+  </div>
+  <div class="hint">↑ Export this to PNG: right-click the card → “Inspect” → in DevTools right-click the <code>&lt;div class="canvas"&gt;</code> node → “Capture node screenshot”. (Exact 1200×630.)</div>
+</body>
+</html>

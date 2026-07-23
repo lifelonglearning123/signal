@@ -1,0 +1,476 @@
+<title>Signal — Navigation redesign</title>
+<style>
+  :root{
+    --bg:#ffffff; --surface:#f5f5f7; --panel:#fbfbfd; --sidebar:#f7f7f9;
+    --ink:#1d1d1f; --t2:#5f5f66; --t3:#8a8a90;
+    --line:#e6e6ea; --line-2:#d6d6db;
+    --accent:#1e5bff; --accent-ink:#0a3fd6; --accent-tint:#eef3ff; --accent-tint-2:#e2ebff;
+    --good:#1a7f37; --good-tint:#e8f4ec; --warn:#8a6d00; --warn-tint:#f7efd6; --crit:#c0392b; --crit-tint:#fbeceb;
+    --radius:12px; --radius-sm:8px; --radius-pill:999px;
+    --shadow:0 1px 2px rgba(20,20,30,.05),0 8px 28px rgba(20,20,40,.06);
+    --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,"SF Mono","SFMono-Regular","Menlo",monospace;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#0a0a0c; --surface:#151518; --panel:#191920; --sidebar:#101013;
+      --ink:#f4f4f7; --t2:#a6a6ad; --t3:#77777f;
+      --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.14);
+      --accent:#5a86ff; --accent-ink:#8cabff; --accent-tint:rgba(40,91,255,.16); --accent-tint-2:rgba(40,91,255,.24);
+      --good:#4cc16f; --good-tint:rgba(76,193,111,.14); --warn:#e2b53c; --warn-tint:rgba(226,181,60,.14); --crit:#ff6b5e; --crit-tint:rgba(255,107,94,.14);
+      --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+      --bg:#0a0a0c; --surface:#151518; --panel:#191920; --sidebar:#101013;
+      --ink:#f4f4f7; --t2:#a6a6ad; --t3:#77777f;
+      --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.14);
+      --accent:#5a86ff; --accent-ink:#8cabff; --accent-tint:rgba(40,91,255,.16); --accent-tint-2:rgba(40,91,255,.24);
+      --good:#4cc16f; --good-tint:rgba(76,193,111,.14); --warn:#e2b53c; --warn-tint:rgba(226,181,60,.14); --crit:#ff6b5e; --crit-tint:rgba(255,107,94,.14);
+      --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.35);
+  }
+  :root[data-theme="light"]{
+      --bg:#ffffff; --surface:#f5f5f7; --panel:#fbfbfd; --sidebar:#f7f7f9;
+      --ink:#1d1d1f; --t2:#5f5f66; --t3:#8a8a90;
+      --line:#e6e6ea; --line-2:#d6d6db;
+      --accent:#1e5bff; --accent-ink:#0a3fd6; --accent-tint:#eef3ff; --accent-tint-2:#e2ebff;
+      --good:#1a7f37; --good-tint:#e8f4ec; --warn:#8a6d00; --warn-tint:#f7efd6; --crit:#c0392b; --crit-tint:#fbeceb;
+      --shadow:0 1px 2px rgba(20,20,30,.05),0 8px 28px rgba(20,20,40,.06);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased}
+  .num{font-variant-numeric:tabular-nums}
+  .mono{font-family:var(--mono)}
+  button{font-family:inherit}
+  ::selection{background:var(--accent-tint-2)}
+
+  /* Intro banner */
+  .intro{display:flex;gap:14px;align-items:flex-start;padding:14px 18px;background:var(--accent-tint);border-bottom:1px solid var(--line);font-size:13px;color:var(--t2)}
+  .intro b{color:var(--ink)}
+  .intro .x{margin-left:auto;flex:none;border:none;background:transparent;color:var(--t3);cursor:pointer;font-size:18px;line-height:1;padding:2px 6px;border-radius:6px}
+  .intro .x:hover{background:var(--accent-tint-2);color:var(--ink)}
+  .intro kbd{font-family:var(--mono);font-size:11px;background:var(--bg);border:1px solid var(--line-2);border-radius:5px;padding:1px 5px;color:var(--ink)}
+
+  /* App shell */
+  .app{display:grid;grid-template-columns:248px 1fr;min-height:640px}
+  @media (max-width:820px){.app{grid-template-columns:1fr}.side{display:none}}
+
+  .side{background:var(--sidebar);border-right:1px solid var(--line);display:flex;flex-direction:column;padding:16px 12px;gap:2px}
+  .brand{display:flex;align-items:center;gap:10px;padding:6px 10px 16px}
+  .brand .mk{display:flex;align-items:flex-end;gap:2.5px;height:20px}
+  .brand .mk i{width:3.5px;border-radius:2px;background:var(--accent);display:block}
+  .brand .mk i:nth-child(1){height:8px}.brand .mk i:nth-child(2){height:14px}.brand .mk i:nth-child(3){height:20px}.brand .mk i:nth-child(4){height:11px}
+  .brand .nm{font-weight:650;font-size:16px;letter-spacing:-.02em}
+  .navgroup{font-size:10.5px;text-transform:uppercase;letter-spacing:.09em;color:var(--t3);font-weight:650;padding:14px 12px 6px}
+  .navitem{display:flex;align-items:center;gap:11px;width:100%;text-align:left;border:none;background:transparent;color:var(--t2);
+    padding:9px 12px;border-radius:var(--radius-sm);font-size:13.5px;font-weight:500;cursor:pointer;transition:background .12s,color .12s}
+  .navitem:hover{background:var(--surface);color:var(--ink)}
+  .navitem.on{background:var(--accent-tint);color:var(--accent-ink);font-weight:600}
+  .navitem .ic{width:17px;height:17px;flex:none;opacity:.85}
+  .navitem.on .ic{opacity:1}
+  .navdiv{height:1px;background:var(--line);margin:12px 8px}
+  .navitem .tag{margin-left:auto;font-size:10px;font-weight:600;color:var(--t3);background:var(--surface);border:1px solid var(--line);padding:1px 6px;border-radius:var(--radius-pill)}
+  .navitem.on .tag{color:var(--accent-ink);background:var(--bg);border-color:var(--accent-tint-2)}
+  .side .foot{margin-top:auto;padding:12px 12px 4px;border-top:1px solid var(--line);color:var(--t3);font-size:12px}
+
+  /* Main */
+  .main{min-width:0;display:flex;flex-direction:column;background:var(--bg)}
+  .topbar{display:flex;align-items:center;gap:16px;padding:14px 26px;border-bottom:1px solid var(--line);position:sticky;top:0;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);z-index:5}
+  .crumb{font-size:13px;color:var(--t3);display:flex;align-items:center;gap:7px;min-width:0;overflow:hidden}
+  .crumb .c-link{color:var(--t2);cursor:pointer}.crumb .c-link:hover{color:var(--accent-ink)}
+  .crumb .c-now{color:var(--ink);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .crumb .sep{color:var(--t3)}
+  .seg{margin-left:auto;display:flex;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-pill);padding:3px}
+  .seg button{border:none;background:transparent;color:var(--t2);font-size:12.5px;font-weight:600;padding:6px 15px;border-radius:var(--radius-pill);cursor:pointer;transition:.12s}
+  .seg button.on{background:var(--bg);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+  .seg .lbl{color:var(--t3);font-size:11px;font-weight:600;align-self:center;padding-left:8px;padding-right:4px}
+  .themebtn{border:1px solid var(--line);background:var(--surface);color:var(--t2);border-radius:var(--radius-pill);width:34px;height:34px;cursor:pointer;font-size:15px}
+  .themebtn:hover{color:var(--ink)}
+
+  .content{padding:26px;overflow:auto}
+  .h1{font-size:22px;font-weight:680;letter-spacing:-.02em;margin:0 0 3px}
+  .sub{color:var(--t2);font-size:13.5px;margin:0 0 20px}
+
+  /* Design note callout */
+  .note{display:flex;gap:10px;align-items:flex-start;background:var(--accent-tint);border:1px solid var(--accent-tint-2);border-radius:var(--radius);padding:11px 14px;font-size:12.5px;color:var(--t2);margin:0 0 18px}
+  .note .d{flex:none;width:18px;height:18px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:1px}
+  .note b{color:var(--ink)}
+
+  /* Cards / grid */
+  .grid{display:grid;gap:14px}
+  .g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}.g2{grid-template-columns:repeat(2,1fr)}
+  @media (max-width:720px){.g3,.g4,.g2{grid-template-columns:1fr 1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
+  .stat .k{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--t3);font-weight:650}
+  .stat .v{font-size:26px;font-weight:700;letter-spacing:-.02em;margin-top:6px}
+  .stat .m{font-size:12px;color:var(--t2);margin-top:3px}
+  .stat .v.good{color:var(--good)}
+
+  /* Tabs */
+  .tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);margin:2px 0 20px;overflow-x:auto}
+  .tab{border:none;background:transparent;color:var(--t2);font-size:13.5px;font-weight:550;padding:10px 14px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:.12s}
+  .tab:hover{color:var(--ink)}
+  .tab.on{color:var(--accent-ink);border-bottom-color:var(--accent)}
+
+  /* List rows */
+  .list{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--panel)}
+  .row{display:flex;align-items:center;gap:14px;padding:14px 16px;border-top:1px solid var(--line);cursor:pointer;transition:background .1s}
+  .row:first-child{border-top:none}
+  .row:hover{background:var(--surface)}
+  .row .av{width:34px;height:34px;border-radius:9px;flex:none;background:var(--accent-tint);color:var(--accent-ink);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:14px}
+  .row .tw{min-width:0;flex:1}
+  .row .t1{font-weight:600;font-size:14px}
+  .row .t2{color:var(--t3);font-size:12.5px;margin-top:1px}
+  .row .chev{color:var(--t3);flex:none}
+  .row.static{cursor:default}.row.static:hover{background:var(--panel)}
+
+  /* Chips / pills */
+  .pill{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:var(--radius-pill);white-space:nowrap}
+  .pill.live{background:var(--good-tint);color:var(--good)}
+  .pill.warn{background:var(--warn-tint);color:var(--warn)}
+  .pill.crit{background:var(--crit-tint);color:var(--crit)}
+  .pill.mut{background:var(--surface);color:var(--t2);border:1px solid var(--line)}
+  .pill.acc{background:var(--accent-tint);color:var(--accent-ink)}
+  .dot{width:7px;height:7px;border-radius:50%;background:currentColor}
+
+  /* Buttons */
+  .btn{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line-2);background:var(--panel);color:var(--ink);font-size:13px;font-weight:600;padding:9px 15px;border-radius:var(--radius-sm);cursor:pointer;transition:.12s}
+  .btn:hover{background:var(--surface)}
+  .btn.pri{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.pri:hover{background:var(--accent-ink)}
+
+  /* Simple field mock */
+  .field{margin-bottom:16px}
+  .field label{display:block;font-size:12px;font-weight:650;color:var(--t2);margin-bottom:6px}
+  .field .inp{border:1px solid var(--line-2);background:var(--bg);border-radius:var(--radius-sm);padding:10px 12px;font-size:13.5px;color:var(--ink)}
+  .field .inp.area{min-height:76px;white-space:pre-wrap;color:var(--t2)}
+  .kv{display:flex;justify-content:space-between;padding:11px 0;border-top:1px solid var(--line);font-size:13.5px}
+  .kv:first-child{border-top:none}.kv .k{color:var(--t2)}.kv .v{font-weight:600}
+
+  .hide{display:none!important}
+  a:focus-visible,button:focus-visible,.row:focus-visible,.tab:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+  .foot-legend{font-size:11.5px;color:var(--t3);padding:16px 26px 26px;border-top:1px solid var(--line);display:flex;gap:18px;flex-wrap:wrap;align-items:center}
+  .foot-legend .k{display:inline-flex;align-items:center;gap:6px}
+</style>
+
+<div class="intro" id="intro">
+  <div><b>Proposed Signal navigation — clickable mockup.</b> Toggle <b>Proposed / Current</b> top-right to compare the sidebar. Open <b>Clients → Choice Mortgages → a bot</b> to see the new tabbed pages. Blue <kbd>i</kbd> notes explain each decision from our discussion.</div>
+  <button class="x" id="introX" aria-label="Dismiss">×</button>
+</div>
+
+<div class="app">
+  <aside class="side">
+    <div class="brand"><span class="mk"><i></i><i></i><i></i><i></i></span><span class="nm">Signal</span></div>
+    <nav id="nav"></nav>
+    <div class="foot">Northstar Agency · agency workspace</div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="crumb" id="crumb"></div>
+      <div class="seg" role="tablist" aria-label="Navigation version">
+        <span class="lbl">Nav:</span>
+        <button id="segProp" class="on" type="button">Proposed</button>
+        <button id="segCur" type="button">Current</button>
+      </div>
+      <button class="themebtn" id="theme" title="Toggle light / dark" aria-label="Toggle theme">◐</button>
+    </div>
+
+    <div class="content" id="content"><!-- screens injected --></div>
+
+    <div class="foot-legend">
+      <span class="k"><span class="pill live"><span class="dot"></span>Live</span> bot answering calls</span>
+      <span class="k"><span class="pill acc">2 bots</span> a client with multiple bots</span>
+      <span class="k"><span class="d-note" style="width:16px;height:16px;border-radius:50%;background:var(--accent);color:#fff;font-size:10px;font-weight:800;display:inline-flex;align-items:center;justify-content:center">i</span> = a design decision from our chat</span>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s,r){return (r||document).querySelector(s)};
+  var content=$("#content"), nav=$("#nav"), crumb=$("#crumb");
+
+  /* ---- icons (inline, stroke) ---- */
+  function ic(p){return '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">'+p+'</svg>'}
+  var I={
+    dash: ic('<rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/>'),
+    calls: ic('<path d="M4 5c0 8 7 15 15 15l0-3-4-2-2 2c-3-1.5-5.5-4-7-7l2-2-2-4-3 0Z"/>'),
+    clients: ic('<path d="M3 21V7l6-4 6 4v14"/><path d="M15 21V11l6 0 0 10"/><path d="M7 9h0M7 13h0M7 17h0"/>'),
+    bots: ic('<rect x="4" y="8" width="16" height="11" rx="3"/><path d="M12 8V4"/><circle cx="12" cy="4" r="1.3"/><path d="M9 13h0M15 13h0"/>'),
+    deck: ic('<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M12 16v4M8 20h8"/>'),
+    phone: ic('<rect x="7" y="3" width="10" height="18" rx="2.5"/><path d="M11 18h2"/>'),
+    billing: ic('<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/>'),
+    alerts: ic('<path d="M6 9a6 6 0 1112 0c0 5 2 6 2 6H4s2-1 2-6Z"/><path d="M10 20a2 2 0 004 0"/>'),
+    settings: ic('<circle cx="12" cy="12" r="3.2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/>'),
+    account: ic('<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>')
+  };
+
+  /* ---- nav models ---- */
+  var PROPOSED=[
+    {group:"Monitor"},
+    {k:"dashboard",label:"Dashboard",icon:I.dash},
+    {k:"calls",label:"Calls",icon:I.calls,tag:"Alerts"},
+    {group:"Manage"},
+    {k:"clients",label:"Clients",icon:I.clients},
+    {group:"Grow"},
+    {k:"deck",label:"Pitch deck",icon:I.deck},
+    {div:true},
+    {k:"billing",label:"Billing",icon:I.billing},
+    {k:"numbers",label:"Phone numbers",icon:I.phone},
+    {k:"settings",label:"Settings",icon:I.settings},
+    {k:"account",label:"Account",icon:I.account}
+  ];
+  var CURRENT=[
+    {k:"dashboard",label:"Dashboard",icon:I.dash},
+    {k:"clients",label:"Clients",icon:I.clients},
+    {k:"botsflat",label:"Bots",icon:I.bots},
+    {k:"calls",label:"Calls",icon:I.calls},
+    {k:"numbers",label:"Phone number",icon:I.phone},
+    {k:"billing",label:"Billing",icon:I.billing},
+    {k:"alertsflat",label:"Alerts",icon:I.alerts},
+    {k:"deck",label:"Pitch deck",icon:I.deck},
+    {k:"settings",label:"Settings",icon:I.settings},
+    {k:"account",label:"Account",icon:I.account}
+  ];
+
+  /* screen -> which nav key is highlighted */
+  function navKeyFor(screen){
+    if(screen==="clientDetail"||screen==="botDetail") return "clients";
+    if(state.mode==="proposed"){ if(screen==="alertsflat")return "calls"; if(screen==="botsflat")return "clients"; }
+    return screen;
+  }
+
+  var state={mode:"proposed",screen:"clients",client:null,clientTab:"bots",bot:null,botTab:"overview"};
+
+  /* ---- data ---- */
+  var CLIENTS={
+    choice:{name:"Choice Mortgages",init:"CM",bots:2,number:"+44 20 7946 0018",routing:"Menu (press 1 / 2)",
+      botList:[
+        {id:"cm-sales",name:"Sales line",status:"live",desc:"Inbound enquiries · books valuations",voice:"Sonic — British, warm",open:"Hi, thanks for calling Choice Mortgages — how can I help?"},
+        {id:"cm-ah",name:"After-hours support",status:"live",desc:"Evenings & weekends · takes a message, transfers urgent",voice:"Sonic — British, warm",open:"You've reached Choice Mortgages out of hours — I can still help."}
+      ]},
+    bright:{name:"Bright Dental",init:"BD",bots:1,number:"+44 161 496 0042",routing:"Single bot",
+      botList:[{id:"bd-recep",name:"Reception",status:"live",desc:"Books & reschedules appointments",voice:"Aria — British, calm",open:"Good morning, Bright Dental — how can I help you today?"}]},
+    apex:{name:"Apex Plumbing",init:"AP",bots:1,number:"+44 113 496 0100",routing:"Single bot",
+      botList:[{id:"ap-em",name:"Emergency line",status:"warn",desc:"24/7 · triages, dispatches on-call",voice:"Sonic — British, warm",open:"Apex Plumbing emergencies — tell me what's happening."}]}
+  };
+
+  /* ---- render sidebar ---- */
+  function renderNav(){
+    var model = state.mode==="proposed"?PROPOSED:CURRENT, hk=navKeyFor(state.screen), html="";
+    model.forEach(function(it){
+      if(it.group){ html+='<div class="navgroup">'+it.group+'</div>'; return; }
+      if(it.div){ html+='<div class="navdiv"></div>'; return; }
+      html+='<button class="navitem'+(it.k===hk?' on':'')+'" data-nav="'+it.k+'">'+it.icon+'<span>'+it.label+'</span>'+(it.tag?'<span class="tag">'+it.tag+'</span>':'')+'</button>';
+    });
+    nav.innerHTML=html;
+    Array.prototype.forEach.call(nav.querySelectorAll("[data-nav]"),function(b){
+      b.addEventListener("click",function(){ go(b.getAttribute("data-nav")); });
+    });
+  }
+
+  /* ---- crumb ---- */
+  function renderCrumb(){
+    var h='<span class="'+((state.screen==="clientDetail"||state.screen==="botDetail")?"c-link":"c-now")+'" '+((state.screen==="clientDetail"||state.screen==="botDetail")?'data-go="clients"':'')+'>Clients</span>';
+    if(state.screen!=="clientDetail"&&state.screen!=="botDetail"){
+      var lbl={dashboard:"Dashboard",calls:"Calls",clients:"Clients",deck:"Pitch deck",billing:"Billing",numbers:"Phone numbers",settings:"Settings",account:"Account",botsflat:"Bots",alertsflat:"Alerts"}[state.screen]||"";
+      crumb.innerHTML='<span class="c-now">'+lbl+'</span>'; return;
+    }
+    var c=CLIENTS[state.client];
+    h+='<span class="sep">/</span><span class="'+(state.screen==="botDetail"?"c-link":"c-now")+'" '+(state.screen==="botDetail"?'data-go="clientDetail"':'')+'>'+c.name+'</span>';
+    if(state.screen==="botDetail"){
+      var b=c.botList.filter(function(x){return x.id===state.bot})[0];
+      h+='<span class="sep">/</span><span class="c-now">'+b.name+'</span>';
+    }
+    crumb.innerHTML=h;
+    Array.prototype.forEach.call(crumb.querySelectorAll("[data-go]"),function(el){
+      el.addEventListener("click",function(){
+        var t=el.getAttribute("data-go");
+        if(t==="clients") go("clients");
+        else if(t==="clientDetail"){ state.screen="clientDetail"; state.clientTab="bots"; paint(); }
+      });
+    });
+  }
+
+  /* ---- screens ---- */
+  function note(txt){ return '<div class="note"><span class="d">i</span><div>'+txt+'</div></div>'; }
+  function esc(s){return s}
+
+  function screenDashboard(){
+    return '<h1 class="h1">Dashboard</h1><p class="sub">Day-to-day health across all clients.</p>'
+      +note('<b>Monitor group, top of the nav.</b> Dashboard, Calls and Alerts are what you touch daily, so they sit first — the rest of the old flat list moved down.')
+      +'<div class="grid g4">'
+      +stat("Calls today","134","▲ 12% vs yesterday","good")
+      +stat("Booked","41","31% of answered")
+      +stat("Missed by AI","2","transferred to voicemail")
+      +stat("Open alerts","1","Apex · emergency line",null,"warn")
+      +'</div>';
+  }
+  function stat(k,v,m,cls,pill){
+    return '<div class="card stat"><div class="k">'+k+'</div><div class="v '+(cls||"")+' num">'+v+'</div><div class="m">'+(pill?'<span class="pill '+pill+'"><span class="dot"></span>'+m+'</span>':m)+'</div></div>';
+  }
+  function screenCalls(){
+    var rows=[
+      ["Choice Mortgages","Sales line","Inbound","2:14","Booked valuation","live"],
+      ["Bright Dental","Reception","Inbound","1:02","Rescheduled","live"],
+      ["Apex Plumbing","Emergency line","Inbound","3:48","Dispatched on-call","live"],
+      ["Choice Mortgages","After-hours support","Inbound","0:52","Message taken","live"]
+    ].map(function(r){
+      return '<div class="row static"><div class="av">'+r[0].split(" ").map(function(w){return w[0]}).slice(0,2).join("")+'</div>'
+        +'<div class="tw"><div class="t1">'+r[0]+' · <span style="color:var(--t2);font-weight:500">'+r[1]+'</span></div><div class="t2">'+r[2]+' · '+r[3]+' · '+r[4]+'</div></div>'
+        +'<span class="pill live"><span class="dot"></span>done</span></div>';
+    }).join("");
+    return '<h1 class="h1">Calls</h1><p class="sub">Every call across your clients — filter by client or bot.</p>'
+      +note('<b>Alerts folded in here.</b> You called alerts “a subset of calls,” so instead of a separate menu item they live as a tab + a badge on Calls.')
+      +'<div class="tabs"><button class="tab on">All calls</button><button class="tab">Alerts <span class="pill crit" style="margin-left:6px;padding:1px 7px">1</span></button><button class="tab">Bookings</button></div>'
+      +'<div class="list">'+rows+'</div>';
+  }
+  function screenClients(){
+    var keys=["choice","bright","apex"];
+    var rows=keys.map(function(k){
+      var c=CLIENTS[k];
+      return '<div class="row" data-client="'+k+'"><div class="av">'+c.init+'</div>'
+        +'<div class="tw"><div class="t1">'+c.name+'</div><div class="t2">'+(c.bots>1?'<span class="pill acc" style="padding:1px 7px;margin-right:6px">'+c.bots+' bots</span>':'')+c.routing+' · '+c.number+'</div></div>'
+        +(c.botList.some(function(b){return b.status==="warn"})?'<span class="pill warn"><span class="dot"></span>needs attention</span>':'<span class="pill live"><span class="dot"></span>Live</span>')
+        +'<span class="chev">›</span></div>';
+    }).join("");
+    return '<h1 class="h1">Clients</h1><p class="sub">Each client is an account. Open one to manage its bots, billing and calls.</p>'
+      +note('<b>Clients is now the spine.</b> “Bots” is gone from the top nav — a client owns its bots. Choice Mortgages has two, sharing one number.')
+      +'<div class="list">'+rows+'</div>';
+  }
+  function screenClientDetail(){
+    var c=CLIENTS[state.client];
+    var tabs=[["overview","Overview"],["bots","Bots"],["calls","Calls"],["billing","Billing"],["settings","Settings"]];
+    var tb=tabs.map(function(t){return '<button class="tab'+(t[0]===state.clientTab?' on':'')+'" data-ctab="'+t[0]+'">'+t[1]+'</button>'}).join("");
+    var body="";
+    if(state.clientTab==="bots"){
+      var list=c.botList.map(function(b){
+        return '<div class="row" data-bot="'+b.id+'"><div class="av">'+I.bots.replace('class="ic"','class="ic" style="width:18px;height:18px"')+'</div>'
+          +'<div class="tw"><div class="t1">'+b.name+'</div><div class="t2">'+b.desc+'</div></div>'
+          +'<span class="pill '+(b.status==="warn"?"warn":"live")+'"><span class="dot"></span>'+(b.status==="warn"?"check":"Live")+'</span><span class="chev">›</span></div>';
+      }).join("");
+      body=note('<b>This is where “Add bot” lives — and it reuses <em>this</em> client.</b> That closes the old bug where the wizard minted a duplicate client every time. Both bots here share one number, routed by a rule you set.')
+        +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><div style="font-weight:650">'+c.bots+' bot'+(c.bots>1?'s':'')+' · '+c.number+' · <span style="color:var(--t2);font-weight:500">routing: '+c.routing+'</span></div><button class="btn pri">＋ Add bot</button></div>'
+        +'<div class="list">'+list+'</div>';
+    } else if(state.clientTab==="billing"){
+      body=note('<b>Option A — the client is the account.</b> One plan, one included-minutes pool and one invoice; every bot draws from it, with a per-bot breakdown below.')
+        +'<div class="grid g3" style="margin-bottom:16px">'+stat("Plan","Growth","2,000 min / mo included")+stat("Used this month","1,142","57% of allowance")+stat("Wallet","—","auto top-up off")+'</div>'
+        +'<div class="card"><div style="font-weight:650;margin-bottom:8px">Usage by bot</div><div class="kv"><span class="k">Sales line</span><span class="v num">781 min</span></div><div class="kv"><span class="k">After-hours support</span><span class="v num">361 min</span></div><div class="kv"><span class="k">Next invoice · 1 Aug</span><span class="v num">£149.00</span></div></div>';
+    } else if(state.clientTab==="settings"){
+      body=note('<b>Client-level config lives here</b> — GHL connection, timezone, business hours, notifications, and the phone number(s). Rarely touched, so it’s a tab, not a top-nav item.')
+        +'<div class="grid g2"><div class="card"><div style="font-weight:650;margin-bottom:8px">Numbers &amp; routing</div><div class="kv"><span class="k">Number</span><span class="v mono">'+c.number+'</span></div><div class="kv"><span class="k">Shared by</span><span class="v">'+c.bots+' bot'+(c.bots>1?'s':'')+'</span></div><div class="kv"><span class="k">Routing</span><span class="v"><span class="pill acc">'+c.routing+'</span></span></div></div>'
+        +'<div class="card"><div style="font-weight:650;margin-bottom:8px">Connection</div><div class="kv"><span class="k">GoHighLevel</span><span class="v"><span class="pill live"><span class="dot"></span>Connected</span></span></div><div class="kv"><span class="k">Timezone</span><span class="v">Europe/London</span></div><div class="kv"><span class="k">Business hours</span><span class="v">Mon–Fri 9–18</span></div></div></div>';
+    } else if(state.clientTab==="calls"){
+      body='<div class="list"><div class="row static"><div class="av">CM</div><div class="tw"><div class="t1">Sales line · <span style="color:var(--t2);font-weight:500">Inbound</span></div><div class="t2">2:14 · Booked valuation</div></div><span class="pill live"><span class="dot"></span>done</span></div>'
+        +'<div class="row static"><div class="av">CM</div><div class="tw"><div class="t1">After-hours support · <span style="color:var(--t2);font-weight:500">Inbound</span></div><div class="t2">0:52 · Message taken</div></div><span class="pill live"><span class="dot"></span>done</span></div></div>';
+    } else {
+      body='<div class="grid g3">'+stat("Bots",""+c.bots,"under one account")+stat("Calls · 7d","312","▲ 8%","good")+stat("Booked · 7d","96","31%")+'</div>';
+    }
+    return '<div style="display:flex;align-items:center;gap:12px;margin-bottom:4px"><div class="row" style="border:none;padding:0;cursor:default"><div class="av" style="width:40px;height:40px;font-size:15px">'+c.init+'</div></div>'
+      +'<div><h1 class="h1" style="margin:0">'+c.name+'</h1><div class="sub" style="margin:2px 0 0">'+(c.bots>1?'<span class="pill acc" style="margin-right:6px">'+c.bots+' bots</span>':'')+'Account · one plan, one invoice</div></div></div>'
+      +'<div class="tabs" style="margin-top:16px">'+tb+'</div>'+body;
+  }
+  function screenBotDetail(){
+    var c=CLIENTS[state.client], b=c.botList.filter(function(x){return x.id===state.bot})[0];
+    var tabs=[["overview","Overview"],["voice","Voice & script"],["booking","Booking & transfer"],["hours","Hours"]];
+    var tb=tabs.map(function(t){return '<button class="tab'+(t[0]===state.botTab?' on':'')+'" data-btab="'+t[0]+'">'+t[1]+'</button>'}).join("");
+    var body="";
+    if(state.botTab==="voice"){
+      body=note('<b>This used to be the “Wizard.”</b> Everything it buried — voice, opening line, prompt — now lives in one predictable tabbed page. No hunting between a shallow wizard and a deep settings wheel.')
+        +'<div class="field"><label>Voice</label><div class="inp">'+b.voice+'</div></div>'
+        +'<div class="field"><label>Opening line</label><div class="inp">'+b.open+'</div></div>'
+        +'<div class="field"><label>Prompt / instructions</label><div class="inp area">You are the receptionist for '+c.name+'. Be warm and concise. Qualify the caller, answer common questions, and book an appointment when they\'re ready…</div></div>'
+        +'<button class="btn pri">Save &amp; publish</button>';
+    } else if(state.botTab==="booking"){
+      body='<div class="grid g2"><div class="card"><div style="font-weight:650;margin-bottom:8px">Calendar booking</div><div class="kv"><span class="k">GHL calendar</span><span class="v"><span class="pill live"><span class="dot"></span>On</span></span></div><div class="kv"><span class="k">Slot length</span><span class="v">30 min</span></div></div>'
+        +'<div class="card"><div style="font-weight:650;margin-bottom:8px">Transfer to human</div><div class="kv"><span class="k">When</span><span class="v">Hot lead / asks for a person</span></div><div class="kv"><span class="k">Transfer to</span><span class="v mono">+44 20 7946 0100</span></div></div></div>';
+    } else if(state.botTab==="hours"){
+      body=note('<b>Timezone is a setting, as you said.</b> Hours &amp; timezone can inherit from the client or be overridden per bot — the After-hours bot is exactly the “different hours, same number” case.')
+        +'<div class="card"><div class="kv"><span class="k">Timezone</span><span class="v">Inherit from client · Europe/London</span></div><div class="kv"><span class="k">Answers</span><span class="v">'+(b.id==="cm-ah"?"Outside business hours":"Mon–Fri 9–18")+'</span></div></div>';
+    } else {
+      body='<div class="grid g3">'+stat("Calls · 7d",b.id==="cm-sales"?"186":"92","this bot")+stat("Booked",b.id==="cm-sales"?"71":"—",b.id==="cm-sales"?"38%":"takes messages")+stat("Avg length","2:03","")+'</div>';
+    }
+    return '<div><h1 class="h1" style="margin:0">'+b.name+'</h1><div class="sub" style="margin:2px 0 0"><span class="pill '+(b.status==="warn"?"warn":"live")+'" style="margin-right:6px"><span class="dot"></span>'+(b.status==="warn"?"Needs attention":"Live")+'</span>'+c.name+' · '+c.number+'</div></div>'
+      +'<div class="tabs" style="margin-top:16px">'+tb+'</div>'+body;
+  }
+  function screenBotsFlat(){
+    return '<h1 class="h1">Bots</h1><p class="sub">Current: a separate top-level list, disconnected from the client it belongs to.</p>'
+      +note('<b>In the current build this is its own menu item</b> — which is why a client and its bots feel like two unrelated places. The proposal nests bots inside the client instead.')
+      +'<div class="list"><div class="row static"><div class="av">CM</div><div class="tw"><div class="t1">Sales line</div><div class="t2">Choice Mortgages</div></div><span class="pill live"><span class="dot"></span>Live</span></div>'
+      +'<div class="row static"><div class="av">CM</div><div class="tw"><div class="t1">After-hours support</div><div class="t2">Choice Mortgages</div></div><span class="pill live"><span class="dot"></span>Live</span></div>'
+      +'<div class="row static"><div class="av">BD</div><div class="tw"><div class="t1">Reception</div><div class="t2">Bright Dental</div></div><span class="pill live"><span class="dot"></span>Live</span></div></div>';
+  }
+  function screenAlertsFlat(){
+    return '<h1 class="h1">Alerts</h1><p class="sub">Current: a standalone menu item three slots away from Calls.</p>'
+      +note('<b>The proposal moves this under Calls</b> as a tab + badge — you called it “a subset of calls.”')
+      +'<div class="list"><div class="row static"><div class="av" style="background:var(--warn-tint);color:var(--warn)">!</div><div class="tw"><div class="t1">Apex Plumbing · Emergency line</div><div class="t2">3 silent-call drops in the last hour</div></div><span class="pill warn"><span class="dot"></span>open</span></div></div>';
+  }
+  function simple(title,sub,body){ return '<h1 class="h1">'+title+'</h1><p class="sub">'+sub+'</p>'+(body||''); }
+
+  function paint(){
+    var s=state.screen, html="";
+    if(s==="dashboard") html=screenDashboard();
+    else if(s==="calls") html=screenCalls();
+    else if(s==="clients") html=screenClients();
+    else if(s==="clientDetail") html=screenClientDetail();
+    else if(s==="botDetail") html=screenBotDetail();
+    else if(s==="botsflat") html=screenBotsFlat();
+    else if(s==="alertsflat") html=screenAlertsFlat();
+    else if(s==="deck") html=simple("Pitch deck","Marketing collateral — auto-branded per agency.",note('<b>Not operational, so it sits in its own “Grow” slot</b> — you flagged it as collateral, not day-to-day.')+'<div class="card">Your branded sales &amp; white-label decks live here.</div>');
+    else if(s==="numbers") html=simple("Phone numbers","Your number pool — a reference you rarely change.",note('<b>Demoted to the quiet zone.</b> It was sitting up at #5; it’s a lookup, so it drops to the bottom with the other config.')+'<div class="list"><div class="row static"><div class="tw"><div class="t1 mono">+44 20 7946 0018</div><div class="t2">Choice Mortgages · 2 bots · Menu routing</div></div><span class="pill live"><span class="dot"></span>Active</span></div><div class="row static"><div class="tw"><div class="t1 mono">+44 161 496 0042</div><div class="t2">Bright Dental · 1 bot</div></div><span class="pill live"><span class="dot"></span>Active</span></div></div>');
+    else if(s==="billing") html=simple("Billing","Your agency revenue across all clients.",'<div class="grid g3">'+stat("MRR","£1,043","▲ 2 clients","good")+stat("This month","£1,043","7 client invoices")+stat("Overage","£38","billed on top")+'</div>');
+    else if(s==="settings") html=simple("Settings","Agency-wide configuration.",note('<b>Integrations live inside here</b> rather than as their own item, and Settings + Account sink to the very bottom — you only visit them occasionally.')+'<div class="grid g2"><div class="card"><b>Branding</b><div class="sub" style="margin-top:6px">Logo, colour, domain</div></div><div class="card"><b>Integrations</b><div class="sub" style="margin-top:6px">GoHighLevel, Stripe, Retell</div></div></div>');
+    else if(s==="account") html=simple("Account","You &amp; your team.",'<div class="card"><div class="kv"><span class="k">Signed in</span><span class="v">chao@northstar.agency</span></div><div class="kv"><span class="k">Role</span><span class="v">Agency owner</span></div></div>');
+    content.innerHTML=html;
+    bindScreen();
+    renderNav();
+    renderCrumb();
+    content.scrollTop=0;
+  }
+
+  function bindScreen(){
+    Array.prototype.forEach.call(content.querySelectorAll("[data-client]"),function(r){
+      r.addEventListener("click",function(){ state.client=r.getAttribute("data-client"); state.screen="clientDetail"; state.clientTab="bots"; paint(); });
+    });
+    Array.prototype.forEach.call(content.querySelectorAll("[data-bot]"),function(r){
+      r.addEventListener("click",function(){ state.bot=r.getAttribute("data-bot"); state.screen="botDetail"; state.botTab="overview"; paint(); });
+    });
+    Array.prototype.forEach.call(content.querySelectorAll("[data-ctab]"),function(t){
+      t.addEventListener("click",function(){ state.clientTab=t.getAttribute("data-ctab"); paint(); });
+    });
+    Array.prototype.forEach.call(content.querySelectorAll("[data-btab]"),function(t){
+      t.addEventListener("click",function(){ state.botTab=t.getAttribute("data-btab"); paint(); });
+    });
+  }
+
+  function go(k){
+    if(k==="clients"){ state.screen="clients"; state.client=null; state.bot=null; }
+    else state.screen=k;
+    paint();
+  }
+
+  /* segmented toggle */
+  function setMode(m){
+    state.mode=m;
+    $("#segProp").className=m==="proposed"?"on":"";
+    $("#segCur").className=m==="current"?"on":"";
+    // if current mode and on a proposed-only drill screen, keep it (drill still demoed); just re-render nav
+    renderNav();
+  }
+  $("#segProp").addEventListener("click",function(){setMode("proposed")});
+  $("#segCur").addEventListener("click",function(){setMode("current")});
+
+  /* theme toggle */
+  $("#theme").addEventListener("click",function(){
+    var r=document.documentElement, cur=r.getAttribute("data-theme");
+    var isDark = cur? cur==="dark" : window.matchMedia("(prefers-color-scheme:dark)").matches;
+    r.setAttribute("data-theme", isDark?"light":"dark");
+  });
+  $("#introX").addEventListener("click",function(){ $("#intro").style.display="none"; });
+
+  paint();
+})();
+</script>
