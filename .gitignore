@@ -24,6 +24,9 @@ marketing/promo-2/
 marketing/promo-talkinghead/
 marketing/video/
 marketing/r2-upload/
+# Per-agency render output (--out mode): videos AND their poster JPEGs. The
+# *.mp4 rule alone would let the posters through.
+marketing/agency-packs/
 **/renders/
 
 # --- Fonts ------------------------------------------------------------------
