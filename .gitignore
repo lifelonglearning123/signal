@@ -1,0 +1,53 @@
+# This repo carries docs, specs and marketing source — NOT media binaries.
+#
+# Video masters and per-agency renders live in Cloudflare R2 and are referenced
+# by URL at runtime (see voice-retell-elevenlabs/src/lib/marketing/catalogue.ts).
+# They must never enter git history: a single `git add -A` in this directory
+# would otherwise commit ~500MB of MP4s permanently, and git has no practical
+# way to take that back.
+#
+# NOTE: this file only stops NEW files being added. Anything already tracked
+# stays tracked until explicitly removed with `git rm --cached`.
+
+# --- Video / audio masters and renders -------------------------------------
+*.mp4
+*.mov
+*.webm
+*.mkv
+*.wav
+*.mp3
+
+# --- HyperFrames render projects and upload staging -------------------------
+# Working directories: each holds a copy of a master plus rendered output.
+marketing/promo/
+marketing/promo-2/
+marketing/promo-talkinghead/
+marketing/video/
+marketing/r2-upload/
+**/renders/
+
+# --- Fonts ------------------------------------------------------------------
+# Arial ships with the render projects for font-identical output. Proprietary,
+# so it stays out of the repo and rides along in R2 instead.
+*.ttf
+*.otf
+
+# --- Dependencies / build output --------------------------------------------
+node_modules/
+.next/
+out/
+build/
+.vercel/
+*.tsbuildinfo
+
+# --- Secrets ----------------------------------------------------------------
+.env
+.env.*
+!.env.example
+
+# --- Local tooling and OS junk ----------------------------------------------
+.claude/
+.agents/
+skills-lock.json
+.DS_Store
+Thumbs.db
