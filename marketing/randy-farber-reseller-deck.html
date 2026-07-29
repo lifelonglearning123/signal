@@ -1,0 +1,806 @@
+<title>Signal · Reseller Programme — prepared for Randy Farber</title>
+
+<style>
+  /* ---- tokens ------------------------------------------------------- */
+  :root {
+    --ground: #F1F2EF;
+    --ground-alt: #E9EBE6;
+    --card: #FBFBF9;
+    --ink: #14181C;
+    --ink-soft: #3C4044;
+    --muted: #66716B;
+    --rule: #D5D9D2;
+    --accent: #216B5C;
+    --accent-soft: #E3EDE9;
+    --signal: #8F6210;
+    --signal-soft: #F5EBD6;
+
+    --display: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --body: "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    --mono: "Cascadia Mono", "SF Mono", "Roboto Mono", Consolas, ui-monospace, monospace;
+
+    --wrap: 74rem;
+    --prose: 34rem;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ground: #12161A;
+      --ground-alt: #171C21;
+      --card: #1B2126;
+      --ink: #E8EBE6;
+      --ink-soft: #C3CAC4;
+      --muted: #929C95;
+      --rule: #293137;
+      --accent: #58AF97;
+      --accent-soft: #16302A;
+      --signal: #E0A33B;
+      --signal-soft: #2C2415;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #12161A;
+    --ground-alt: #171C21;
+    --card: #1B2126;
+    --ink: #E8EBE6;
+    --ink-soft: #C3CAC4;
+    --muted: #929C95;
+    --rule: #293137;
+    --accent: #58AF97;
+    --accent-soft: #16302A;
+    --signal: #E0A33B;
+    --signal-soft: #2C2415;
+  }
+  :root[data-theme="light"] {
+    --ground: #F1F2EF;
+    --ground-alt: #E9EBE6;
+    --card: #FBFBF9;
+    --ink: #14181C;
+    --ink-soft: #3C4044;
+    --muted: #66716B;
+    --rule: #D5D9D2;
+    --accent: #216B5C;
+    --accent-soft: #E3EDE9;
+    --signal: #8F6210;
+    --signal-soft: #F5EBD6;
+  }
+
+  /* ---- base --------------------------------------------------------- */
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 1rem;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+  }
+  .band {
+    padding: clamp(3rem, 7vw, 6rem) clamp(1.25rem, 5vw, 3rem);
+    border-block-start: 1px solid var(--rule);
+  }
+  .band--alt { background: var(--ground-alt); }
+  .band--open { border-block-start: 0; }
+  .wrap { max-width: var(--wrap); margin-inline: auto; }
+  .prose { max-width: var(--prose); }
+
+  h1, h2, h3 { font-family: var(--display); font-weight: 600; text-wrap: balance; line-height: 1.14; }
+  h1 { font-size: clamp(2.35rem, 6.4vw, 4.15rem); letter-spacing: -0.022em; margin: 0; }
+  h2 { font-size: clamp(1.65rem, 3.4vw, 2.4rem); letter-spacing: -0.014em; margin: 0; }
+  h3 { font-size: 1.06rem; font-family: var(--body); font-weight: 650; letter-spacing: -0.004em; margin: 0; }
+  p { margin: 0; }
+  a { color: var(--accent); text-underline-offset: 0.18em; text-decoration-thickness: 1px; }
+  a:focus-visible, .btn:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px;
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 0.685rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0;
+  }
+  .lede { font-size: clamp(1.06rem, 1.9vw, 1.24rem); color: var(--ink-soft); }
+  .fig { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+  .stack { display: flex; flex-direction: column; }
+  .stack--xs { gap: 0.4rem; }
+  .stack--sm { gap: 0.85rem; }
+  .stack--md { gap: 1.5rem; }
+  .stack--lg { gap: 2.5rem; }
+  .stack--xl { gap: 3.5rem; }
+
+  /* ---- cover -------------------------------------------------------- */
+  .cover {
+    padding: clamp(3rem, 9vw, 8rem) clamp(1.25rem, 5vw, 3rem) clamp(3rem, 7vw, 5.5rem);
+  }
+  .cover__meta {
+    display: flex; flex-wrap: wrap; gap: 0.6rem 1.75rem;
+    padding-block-start: 2.25rem; margin-block-start: 2.25rem;
+    border-block-start: 1px solid var(--rule);
+  }
+  .live {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font-family: var(--mono); font-size: 0.685rem;
+    letter-spacing: 0.15em; text-transform: uppercase; color: var(--signal);
+  }
+  .live::before {
+    content: ""; inline-size: 0.45rem; block-size: 0.45rem;
+    border-radius: 50%; background: var(--signal);
+    animation: lamp 3.2s ease-in-out infinite;
+  }
+  @keyframes lamp { 0%, 72%, 100% { opacity: 1; } 84% { opacity: 0.28; } }
+
+  /* ---- index -------------------------------------------------------- */
+  .asks { display: grid; gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
+  .ask {
+    background: var(--card); padding: 1.4rem 1.5rem;
+    display: grid; gap: 0.3rem;
+    grid-template-columns: 2.5rem 1fr;
+  }
+  .ask__n { font-family: var(--mono); font-size: 0.8rem; color: var(--accent); grid-row: span 2; padding-block-start: 0.2rem; }
+  .ask__t { font-weight: 650; }
+  .ask__b { color: var(--muted); font-size: 0.925rem; }
+  @media (min-width: 60rem) { .asks { grid-template-columns: 1fr 1fr; } }
+
+  /* ---- generic cards ------------------------------------------------ */
+  .grid { display: grid; gap: 1.15rem; }
+  @media (min-width: 46rem) { .grid--2 { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 62rem) { .grid--3 { grid-template-columns: repeat(3, 1fr); } }
+  .card {
+    background: var(--card); border: 1px solid var(--rule);
+    padding: 1.4rem 1.5rem; display: flex; flex-direction: column; gap: 0.5rem;
+  }
+  .card p { color: var(--muted); font-size: 0.94rem; }
+
+  .checks { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.7rem; }
+  .checks li { display: grid; grid-template-columns: 1.15rem 1fr; gap: 0.7rem; align-items: start; }
+  .checks li::before {
+    content: ""; margin-block-start: 0.52em;
+    inline-size: 0.5rem; block-size: 0.5rem; background: var(--accent);
+  }
+  .checks--open li::before { background: none; border: 1px solid var(--muted); }
+
+  /* ---- reseller tree ------------------------------------------------ */
+  .tree { display: flex; flex-direction: column; align-items: stretch; }
+  .stratum {
+    background: var(--card); border: 1px solid var(--rule);
+    padding: 1.35rem 1.5rem;
+    display: grid; gap: 1rem;
+  }
+  @media (min-width: 54rem) {
+    .stratum { grid-template-columns: 15rem 1fr; align-items: start; gap: 2rem; }
+  }
+  .stratum--you { border-color: var(--accent); box-shadow: inset 3px 0 0 var(--accent); }
+  .stratum__label { display: flex; flex-direction: column; gap: 0.28rem; }
+  .stratum__name { font-family: var(--mono); font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; }
+  .stratum__count { font-size: 0.86rem; color: var(--muted); }
+  .stratum__body { display: flex; flex-direction: column; gap: 0.75rem; }
+  .stratum__note { font-size: 0.94rem; color: var(--muted); }
+  .nodes { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+  .node {
+    font-family: var(--mono); font-size: 0.755rem; letter-spacing: 0.03em;
+    padding: 0.34rem 0.6rem; border: 1px solid var(--rule); background: var(--ground);
+  }
+  .node--brand { border-color: var(--accent); color: var(--accent); }
+  .node--more { border-style: dashed; color: var(--muted); }
+  .drop {
+    align-self: start; margin-inline-start: clamp(1.25rem, 4vw, 3rem);
+    inline-size: 1px; block-size: 2rem; background: var(--rule);
+    position: relative;
+  }
+  .drop::after {
+    content: ""; position: absolute; inset-block-end: 0; inset-inline-start: -0.22rem;
+    inline-size: 0.45rem; block-size: 0.45rem;
+    border-inline-end: 1px solid var(--rule); border-block-end: 1px solid var(--rule);
+    transform: rotate(45deg) translate(-0.1rem, -0.1rem);
+  }
+
+  /* ---- figures / money ---------------------------------------------- */
+  .scroller { overflow-x: auto; }
+  table { border-collapse: collapse; inline-size: 100%; min-inline-size: 30rem; }
+  caption { text-align: start; color: var(--muted); font-size: 0.875rem; padding-block-end: 0.85rem; }
+  th, td { text-align: start; padding: 0.8rem 1rem; border-block-end: 1px solid var(--rule); }
+  thead th {
+    font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--muted); font-weight: 400;
+  }
+  td.num, th.num { text-align: end; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  tbody tr:last-child td { border-block-end: 0; }
+  .keep { color: var(--signal); font-weight: 650; }
+
+  .tiers { display: grid; gap: 1.15rem; }
+  @media (min-width: 50rem) { .tiers { grid-template-columns: 1fr 1fr; } }
+  .tier {
+    background: var(--card); border: 1px solid var(--rule);
+    padding: 1.6rem 1.65rem; display: flex; flex-direction: column; gap: 1rem;
+  }
+  .tier--pick { border-color: var(--accent); }
+  .tier__price { font-family: var(--mono); font-size: 2.1rem; font-variant-numeric: tabular-nums; letter-spacing: -0.03em; }
+  .tier__price span { font-size: 0.9rem; color: var(--muted); letter-spacing: 0; }
+  .tier__tag {
+    align-self: start; font-family: var(--mono); font-size: 0.68rem;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 0.2rem 0.5rem; background: var(--accent-soft); color: var(--accent);
+  }
+  .tier .checks li { font-size: 0.94rem; }
+
+  .offer {
+    background: var(--signal-soft); border: 1px solid var(--signal);
+    padding: clamp(1.5rem, 4vw, 2.25rem);
+    display: flex; flex-direction: column; gap: 0.85rem;
+  }
+  .offer__fig { font-family: var(--mono); font-size: clamp(1.7rem, 4vw, 2.35rem); color: var(--signal); font-variant-numeric: tabular-nums; }
+  .offer__fig s { color: var(--muted); font-size: 0.55em; margin-inline-end: 0.5rem; }
+
+  /* ---- steps -------------------------------------------------------- */
+  .steps { list-style: none; padding: 0; margin: 0; display: grid; gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
+  .steps li {
+    background: var(--card); padding: 1.25rem 1.5rem;
+    display: grid; grid-template-columns: 2.25rem 1fr; gap: 0.25rem 0;
+  }
+  .steps b { grid-column: 2; }
+  .steps span { grid-column: 2; color: var(--muted); font-size: 0.94rem; }
+  .steps i {
+    grid-row: span 2; font-family: var(--mono); font-style: normal;
+    font-size: 0.8rem; color: var(--accent); padding-block-start: 0.2rem;
+  }
+
+  /* ---- links / buttons ---------------------------------------------- */
+  .btnrow { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.55rem;
+    font-family: var(--mono); font-size: 0.79rem; letter-spacing: 0.05em;
+    padding: 0.7rem 1.1rem; text-decoration: none;
+    border: 1px solid var(--accent); color: var(--accent); background: transparent;
+  }
+  .btn--solid { background: var(--accent); color: var(--ground); border-color: var(--accent); }
+  .btn:hover { background: var(--accent-soft); }
+  .btn--solid:hover { background: var(--accent); opacity: 0.88; }
+
+  .todo {
+    border: 1px dashed var(--signal); background: var(--signal-soft);
+    padding: 1rem 1.2rem; font-size: 0.9rem; color: var(--ink-soft);
+    display: flex; flex-direction: column; gap: 0.3rem;
+  }
+  .todo b { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--signal); }
+
+  footer { color: var(--muted); font-size: 0.875rem; }
+  hr { border: 0; border-block-start: 1px solid var(--rule); margin: 0; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .live::before { animation: none; }
+  }
+</style>
+
+<header class="cover">
+  <div class="wrap stack stack--md">
+    <p class="eyebrow">Signal &middot; Reseller programme</p>
+    <h1>Your brand.<br>Your network.<br>Your margin.</h1>
+    <p class="lede prose">
+      Everything we went through on the call, in writing — with the detail on the
+      reseller programme that isn&rsquo;t on the website yet.
+    </p>
+    <div class="cover__meta">
+      <p class="eyebrow">Prepared for &mdash; Randy Farber</p>
+      <p class="eyebrow">29 July 2026</p>
+      <p class="live">Offer holds to 1 August</p>
+    </div>
+  </div>
+</header>
+
+<section class="band band--alt">
+  <div class="wrap stack stack--md">
+    <p class="eyebrow">What you asked me to send</p>
+    <h2>The four things, and where each one is.</h2>
+    <div class="asks">
+      <div class="ask">
+        <span class="ask__n">01</span>
+        <span class="ask__t">The reseller video</span>
+        <span class="ask__b">The one about reselling GoHighLevel sub-accounts &mdash; <a href="#videos">further down this page</a>.</span>
+      </div>
+      <div class="ask">
+        <span class="ask__n">02</span>
+        <span class="ask__t">The demo site with dummy data</span>
+        <span class="ask__b">Two of them, under two different brands, so you can see the white-label for yourself &mdash; <a href="#see">links below</a>.</span>
+      </div>
+      <div class="ask">
+        <span class="ask__n">03</span>
+        <span class="ask__t">Reseller detail the site is missing</span>
+        <span class="ask__b">How the tree works, who pays whom, what you keep &mdash; <a href="#tree">the section below</a>.</span>
+      </div>
+      <div class="ask">
+        <span class="ask__n">04</span>
+        <span class="ask__t">Something to show a partner</span>
+        <span class="ask__b">This page, minus one section. <a href="#partner">Read the note</a> before you forward it.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap stack stack--lg">
+    <div class="stack stack--md">
+      <p class="eyebrow">The part the website undersells</p>
+      <h2>What &ldquo;white-label&rdquo; actually means here.</h2>
+      <p class="lede prose">
+        There are two separate layers to it, and you asked for both. The voice
+        platform carries your brand, and so does the CRM underneath it &mdash; which
+        is the part almost nobody else will sell you.
+      </p>
+    </div>
+
+    <div class="grid grid--2">
+      <div class="card" style="box-shadow: inset 3px 0 0 var(--accent);">
+        <p class="eyebrow">Layer one &mdash; the voice platform</p>
+        <h3>Signal, under your brand</h3>
+        <p>
+          Your domain, logo, colours and prices on the whole AI receptionist
+          product. Included in both tiers.
+        </p>
+      </div>
+      <div class="card" style="box-shadow: inset 3px 0 0 var(--signal);">
+        <p class="eyebrow">Layer two &mdash; the CRM</p>
+        <h3>GoHighLevel, under your brand</h3>
+        <p>
+          We supply the CRM through our own sub-accounts and brand it to you, so you
+          resell CRM seats as your product &mdash; no GoHighLevel plan of your own, and
+          your clients never see the name. <b>The $397 tier only.</b>
+        </p>
+      </div>
+    </div>
+
+    <div class="grid grid--3">
+      <div class="card">
+        <h3>Their own address</h3>
+        <p>The platform runs on their domain &mdash; <span class="fig">signal.theirbrand.com</span> &mdash; not a shared one with their name in a URL parameter. Certificate and all.</p>
+      </div>
+      <div class="card">
+        <h3>Their own money</h3>
+        <p>Their Stripe account, connected directly. Client payments land in their bank, not ours and not yours. They set setup fees, monthly fees and per-minute rates themselves.</p>
+      </div>
+      <div class="card">
+        <h3>Their own look</h3>
+        <p>Display name, logo, favicon and primary colour. Every screen, every email the platform sends, and the client portal all carry it.</p>
+      </div>
+      <div class="card">
+        <h3>Their own sales material</h3>
+        <p>Pitch decks and promo videos are generated per agency &mdash; their logo and their web address burnt into the render, published into their own CRM media library. Never a shared file with someone else&rsquo;s brand on it.</p>
+      </div>
+      <div class="card">
+        <h3>Their own prices</h3>
+        <p>Setup fee, monthly fee, included minutes, per-minute overage, currency. An agency in Manila and one in Manchester can price completely differently on the same platform.</p>
+      </div>
+      <div class="card">
+        <h3>No trace of us</h3>
+        <p>No Signal branding, no shared login page, no &ldquo;powered by&rdquo;. Emails come from their address. Their client never sees a third party.</p>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="grid grid--2">
+      <div class="stack stack--sm">
+        <p class="eyebrow">What stays ours</p>
+        <ul class="checks checks--open">
+          <li>The infrastructure, uptime and 24/7 agent monitoring.</li>
+          <li>Platform updates &mdash; every agency gets new features automatically, nobody re-brands anything.</li>
+          <li>The voice, telephony and CRM integrations underneath.</li>
+        </ul>
+      </div>
+      <div class="stack stack--sm">
+        <p class="eyebrow">Why that matters to you</p>
+        <p style="color: var(--muted); font-size: 0.94rem;">
+          You are not reselling a licence and then supporting it yourself. When we
+          ship an improvement, every agency underneath you gets it the same day,
+          under their own brand, with no work from you and no announcement that
+          traces back to us.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band band--alt" id="tree">
+  <div class="wrap stack stack--lg">
+    <div class="stack stack--md">
+      <p class="eyebrow">The reseller programme</p>
+      <h2>Three levels, and you sit on top of all of them.</h2>
+      <p class="lede prose">
+        This is the structure you asked about. Each level below you is unlimited,
+        and every level is white-labelled to whoever sits at it.
+      </p>
+    </div>
+
+    <div class="tree">
+      <div class="stratum stratum--you">
+        <div class="stratum__label">
+          <span class="stratum__name" style="color: var(--accent);">You</span>
+          <span class="stratum__count">One account</span>
+        </div>
+        <div class="stratum__body">
+          <div class="nodes"><span class="node node--brand">Randy &middot; your brand</span></div>
+          <p class="stratum__note">
+            You hold the top account. You can build agents yourself for anyone below
+            you, set what each agency pays, and see every call and every invoice in
+            the whole tree.
+          </p>
+        </div>
+      </div>
+
+      <div class="drop"></div>
+
+      <div class="stratum">
+        <div class="stratum__label">
+          <span class="stratum__name">White-label agencies</span>
+          <span class="stratum__count">Unlimited</span>
+        </div>
+        <div class="stratum__body">
+          <div class="nodes">
+            <span class="node">Agency</span>
+            <span class="node">Agency</span>
+            <span class="node">Agency</span>
+            <span class="node">Agency</span>
+            <span class="node node--more">&hellip; no cap</span>
+          </div>
+          <p class="stratum__note">
+            Each one gets its own domain, logo, colours, Stripe account and prices.
+            They recruit and bill their own clients. They cannot see you, each other,
+            or us.
+          </p>
+        </div>
+      </div>
+
+      <div class="drop"></div>
+
+      <div class="stratum">
+        <div class="stratum__label">
+          <span class="stratum__name">Client sub-accounts</span>
+          <span class="stratum__count">Unlimited, per agency</span>
+        </div>
+        <div class="stratum__body">
+          <div class="nodes">
+            <span class="node">HVAC</span>
+            <span class="node">Plumber</span>
+            <span class="node">Electrician</span>
+            <span class="node">Roofer</span>
+            <span class="node">Paving</span>
+            <span class="node node--more">&hellip; no cap</span>
+          </div>
+          <p class="stratum__note">
+            The end businesses. Each gets an AI receptionist, a phone number, and a
+            stripped-back client portal. They see their calls and nothing else.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="stack stack--md">
+      <p class="eyebrow">The split</p>
+      <h3 style="font-size: 1.3rem;">You keep 40% of what every agency below you pays.</h3>
+      <p class="prose" style="color: var(--muted);">
+        We keep 60% and carry the infrastructure, the monitoring and the support.
+        You keep 40%, every month, for as long as that agency stays &mdash; on top
+        of whatever you make from your own direct clients.
+      </p>
+      <div class="scroller">
+        <table>
+          <caption>Recurring revenue from sub-agencies alone, at the $397 tier. Your own client billing sits on top of this.</caption>
+          <thead>
+            <tr>
+              <th scope="col">Agencies below you</th>
+              <th scope="col" class="num">They pay, monthly</th>
+              <th scope="col" class="num">You keep, monthly</th>
+              <th scope="col" class="num">You keep, yearly</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="fig">5</td><td class="num">$1,985</td><td class="num keep">$794</td><td class="num">$9,528</td></tr>
+            <tr><td class="fig">10</td><td class="num">$3,970</td><td class="num keep">$1,588</td><td class="num">$19,056</td></tr>
+            <tr><td class="fig">25</td><td class="num">$9,925</td><td class="num keep">$3,970</td><td class="num">$47,640</td></tr>
+            <tr><td class="fig">50</td><td class="num">$19,850</td><td class="num keep">$7,940</td><td class="num">$95,280</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap stack stack--lg">
+    <div class="stack stack--md">
+      <p class="eyebrow">Your main objection, answered</p>
+      <h2>Your clients never touch GoHighLevel.</h2>
+      <p class="lede prose">
+        You said the more they can reach, the more they break, and the more they
+        call you. So the client never gets the full thing. They get a stripped-back
+        CRM with five areas in it.
+      </p>
+    </div>
+
+    <div class="grid grid--2">
+      <div class="stack stack--sm">
+        <p class="eyebrow">What the client sees</p>
+        <ul class="checks">
+          <li><b>Contacts</b> &mdash; their own list, nothing else.</li>
+          <li><b>Conversation</b> &mdash; calls, chats and messages in one thread.</li>
+          <li><b>Pipeline</b> &mdash; where each job stands.</li>
+          <li><b>Calendar</b> &mdash; bookings the AI made for them.</li>
+          <li><b>Social media planner</b> &mdash; scheduled posts.</li>
+        </ul>
+        <p style="color: var(--muted); font-size: 0.94rem;">
+          It works properly on a phone browser, which the standard app does not.
+          Your tradespeople can check calls from a van.
+        </p>
+      </div>
+      <div class="stack stack--sm">
+        <p class="eyebrow">What stays with you</p>
+        <ul class="checks checks--open">
+          <li>The agent script. They can read every conversation but cannot change a word of how it answers.</li>
+          <li>Agent building. You can build every client&rsquo;s receptionist from your own account and hand over access afterwards.</li>
+          <li>Automations, funnels and campaigns &mdash; you keep the full toolset behind the scenes.</li>
+          <li>Whether they get the builder at all. It can be switched off per client from your side.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band band--alt">
+  <div class="wrap stack stack--lg">
+    <div class="stack stack--md">
+      <p class="eyebrow">What it costs you</p>
+      <h2>Two tiers. The difference is whether GoHighLevel comes with it.</h2>
+      <p class="lede prose">
+        You want CRM access <em>and</em> the CRM carrying your brand, so the second
+        tier is the one that fits you.
+      </p>
+    </div>
+
+    <div class="tiers">
+      <div class="tier">
+        <span class="tier__tag">Signal only</span>
+        <p class="tier__price">$149 <span>/ month, all-in</span></p>
+        <ul class="checks">
+          <li>The full Signal voice platform, white-labelled to you.</li>
+          <li>Unlimited AI voice agents and client sub-accounts.</li>
+          <li>Per-client Stripe billing and 24/7 monitoring.</li>
+          <li>Branded decks and promo videos.</li>
+        </ul>
+        <p style="color: var(--muted); font-size: 0.9rem;">
+          You bring and pay for your own CRM. This does not include GoHighLevel
+          access or GoHighLevel white-label.
+        </p>
+      </div>
+      <div class="tier tier--pick">
+        <span class="tier__tag">Your fit &mdash; Signal + GoHighLevel</span>
+        <p class="tier__price">$397 <span>/ month</span></p>
+        <ul class="checks">
+          <li>Everything in the $149 tier.</li>
+          <li><b>GoHighLevel access provided by us</b> &mdash; cancel your own $297 plan.</li>
+          <li><b>GoHighLevel white-labelled to your brand</b>, so you resell CRM sub-accounts as your own product.</li>
+          <li>Our team builds your automations and funnels and wires them in.</li>
+          <li>Unlimited white-label agencies, each with unlimited sub-accounts.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="offer">
+      <p class="eyebrow" style="color: var(--signal);">On the table until 1 August</p>
+      <p class="offer__fig"><s>$397</s>$198.50 <span style="font-size: 0.42em; color: var(--muted);">/ month, first three months</span></p>
+      <p style="max-width: var(--prose);">
+        Half price for three months on the Signal + GoHighLevel tier. You cancel your
+        own GoHighLevel plan, so set against the <span class="fig">$148</span> you pay
+        today this costs about <span class="fig">$50</span> a month more than standing
+        still &mdash; it replaces that spend rather than adding to it.
+      </p>
+      <p style="max-width: var(--prose); color: var(--muted); font-size: 0.9rem;">
+        After the three months it moves to the standard <span class="fig">$397</span>.
+        Signing five sub-agencies covers that and more on its own.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap stack stack--lg">
+    <div class="stack stack--md">
+      <p class="eyebrow">The economics you asked about</p>
+      <h2>An idle line costs about a dollar a month.</h2>
+      <p class="lede prose">
+        This is why the low ticket you described works. A client who signs up and
+        receives no calls still has a receptionist standing by &mdash; and costs
+        almost nothing to keep there.
+      </p>
+    </div>
+
+    <div class="grid grid--3">
+      <div class="card">
+        <h3>A dormant client</h3>
+        <p><span class="fig" style="font-size: 1.5rem; color: var(--signal);">~$1</span><br>per month, all-in, for a live number with an AI receptionist on it and no calls taken.</p>
+      </div>
+      <div class="card">
+        <h3>Talk time</h3>
+        <p><span class="fig" style="font-size: 1.5rem; color: var(--signal);">~13&cent;</span><br>per minute, at cost. You set the rate you charge on top &mdash; anything above cost is yours.</p>
+      </div>
+      <div class="card">
+        <h3>If you charge $97 a month</h3>
+        <p><span class="fig" style="font-size: 1.5rem; color: var(--signal);">&gt;90%</span><br>gross margin on a typical low-volume trades client, before your own time.</p>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="grid grid--2">
+      <div class="stack stack--sm">
+        <p class="eyebrow">The forwarding charge, explained</p>
+        <p style="color: var(--muted); font-size: 0.94rem;">
+          A caller asks for the owner. The AI says it will put them through and
+          transfers the call. The caller&rsquo;s line stays open the whole time, so
+          telephony keeps charging for it. That onward cost is billed as a separate
+          <b>forwarding rate</b>, set per minute, so a transferred call never quietly
+          eats your margin. You choose whether to pass it on or absorb it &mdash;
+          set it to zero and forwarded calls are free.
+        </p>
+      </div>
+      <div class="stack stack--sm">
+        <p class="eyebrow">Give every agency its own keys</p>
+        <p style="color: var(--muted); font-size: 0.94rem;">
+          Each agency brings its own voice, telephony and CRM credentials. Two
+          reasons, and the second is the one that matters at your scale: their spend
+          lands on their own bill, and if an agency you have never met does something
+          reckless with outbound calling, the liability is theirs and not yours. With
+          a network of a hundred sub-agencies, that separation is the whole game.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band band--alt">
+  <div class="wrap stack stack--lg">
+    <div class="stack stack--md">
+      <p class="eyebrow">Your Philippines plan</p>
+      <h2>What you described is the thing this was built for.</h2>
+      <p class="lede prose">
+        People come in at no cost, sell under their own brand, and you take a share.
+        Here is how each piece of your plan maps onto what already exists &mdash; and
+        the three parts that still need working out.
+      </p>
+    </div>
+
+    <div class="grid grid--2">
+      <div class="stack stack--sm">
+        <p class="eyebrow">Already works</p>
+        <ul class="checks">
+          <li><b>They join at no upfront cost.</b> You set what each agency pays, including nothing to start.</li>
+          <li><b>It looks like their own business.</b> Own domain, logo, colours, prices. Nothing points back to you.</li>
+          <li><b>You build the agents.</b> From your own account, then hand over access. They never need to learn the builder.</li>
+          <li><b>You see everything.</b> A month-end report across every agency and every sub-account beneath them &mdash; including call transcripts, so you can check what is being said in your name.</li>
+          <li><b>They only have to market.</b> Branded decks and videos are already generated for them on day one.</li>
+        </ul>
+      </div>
+      <div class="stack stack--sm">
+        <p class="eyebrow">Still to work out &mdash; honestly</p>
+        <ul class="checks checks--open">
+          <li><b>Collecting money in the Philippines.</b> Each agency normally connects its own Stripe account. Where local banking makes that impractical, the alternative is running billing through your account and paying them out yourself. Worth a conversation before you commit.</li>
+          <li><b>Server cost per agent.</b> Spinning up each new agent has a real cost. At a hundred-plus agencies we should agree how that is handled rather than discover it.</li>
+          <li><b>Outbound calling.</b> Inbound receptionist is live today. Outbound is in development &mdash; don&rsquo;t sell it yet.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="videos">
+  <div class="wrap stack stack--lg">
+    <div class="stack stack--md">
+      <p class="eyebrow">The videos</p>
+      <h2>The reseller walkthrough, and two you can send out.</h2>
+    </div>
+    <div class="grid grid--3">
+      <div class="card">
+        <h3>Unlimited CRM sub-accounts</h3>
+        <p>The one you asked for &mdash; reselling CRM sub-accounts, and how the tree pays out at each level.</p>
+      </div>
+      <div class="card">
+        <h3>Sell every client an AI receptionist</h3>
+        <p>For recruiting agencies: why this is the easiest recurring line to add to an existing book of clients.</p>
+      </div>
+      <div class="card">
+        <h3>They build it. You bill it.</h3>
+        <p>For recruiting agencies: the client does the setup in minutes, the agency collects every month.</p>
+      </div>
+    </div>
+    <div class="todo">
+      <b>Before sending &mdash; needs a link</b>
+      <span>
+        <code>CRM.mp4</code> is 79&nbsp;MB, which is too big to email. It needs a hosted
+        URL (CRM media library, R2, or an unlisted upload) before this page goes to
+        Randy. The two agency videos already render per-agency into the CRM media
+        library. Tell me where to put the file and I will wire the links in.
+      </span>
+    </div>
+  </div>
+</section>
+
+<section class="band band--alt" id="see">
+  <div class="wrap stack stack--lg">
+    <div class="stack stack--md">
+      <p class="eyebrow">See it working</p>
+      <h2>The same platform, twice, under two different brands.</h2>
+      <p class="lede prose">
+        Each demo is a working back end filled with a typical agency&rsquo;s week
+        &mdash; four clients, eight agents, about 150 calls. Click into a call, read
+        the transcript, look at the alerts. Put your email in and you are straight in.
+      </p>
+      <p class="prose" style="color: var(--muted);">
+        Open both, side by side. Identical screens, two different companies&rsquo;
+        names, colours and web addresses. That is the white-label layer working on
+        live infrastructure, not a mock-up &mdash; and yours would sit alongside them
+        as a third.
+      </p>
+    </div>
+
+    <div class="grid grid--2">
+      <div class="card">
+        <p class="eyebrow">signal.macaws.ai</p>
+        <h3>Macaws AI</h3>
+        <p>Our own instance &mdash; the platform as we run it.</p>
+        <div class="btnrow" style="margin-block-start: 0.4rem;">
+          <a class="btn btn--solid" href="https://signal.macaws.ai/demo">Open this demo &rarr;</a>
+        </div>
+      </div>
+      <div class="card" style="box-shadow: inset 3px 0 0 var(--signal);">
+        <p class="eyebrow">signal.artificialignorance.io</p>
+        <h3>Artificial Ignorance</h3>
+        <p>A live agency on the same platform, running entirely under their own domain and brand.</p>
+        <div class="btnrow" style="margin-block-start: 0.4rem;">
+          <a class="btn btn--solid" href="https://signal.artificialignorance.io/demo">Open this demo &rarr;</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="btnrow">
+      <a class="btn" href="https://signal.macaws.ai/for-agencies">The agency deck &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="partner">
+  <div class="wrap stack stack--md">
+    <p class="eyebrow">Before you forward this</p>
+    <h2>One section to remove first.</h2>
+    <p class="prose">
+      You said you don&rsquo;t want a partner to know everything yet. The section
+      that shows your side of it is <b>The split</b> &mdash; the 40% table. Everything
+      else on this page is safe to send to a partner as it stands.
+    </p>
+    <p class="prose" style="color: var(--muted);">
+      If it&rsquo;s easier, the <a href="https://signal.macaws.ai/for-agencies">agency
+      deck</a> is already written for that audience and carries none of your numbers.
+      Say the word and I&rsquo;ll cut a partner-facing version of this page instead.
+    </p>
+  </div>
+</section>
+
+<section class="band band--alt">
+  <div class="wrap stack stack--md">
+    <p class="eyebrow">Next</p>
+    <h2>What happens, in order.</h2>
+    <ol class="steps">
+      <li><i>01</i><b>You line up your partners</b><span>You said a couple of days, and one or two people in mind. The half-price offer holds to 1 August.</span></li>
+      <li><i>02</i><b>We get you on the platform</b><span>Your domain, logo and colours go on. Cancel your own GoHighLevel plan on the $397 tier &mdash; we provide the sub-accounts.</span></li>
+      <li><i>03</i><b>We build your first agent together</b><span>One real client, start to finish, so you have seen every step before you teach anyone else.</span></li>
+      <li><i>04</i><b>You add your first sub-agency</b><span>Their brand goes on, their prices go in, their marketing library generates. Then it repeats.</span></li>
+    </ol>
+    <hr>
+    <footer class="stack stack--xs">
+      <p>Prepared for Randy Farber &middot; 29 July 2026 &middot; figures as quoted on our call.</p>
+      <p>Pricing shown in US dollars. Voice and telephony costs are at-cost pass-through and vary by country.</p>
+    </footer>
+  </div>
+</section>
